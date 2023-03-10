@@ -1,15 +1,22 @@
 package com.angusF.Anly.service;
+import com.angusF.Anly.data.UrlRepository;
 import com.angusF.Anly.model.Url;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 @Service
 public class AnlyService {
+    private final UrlRepository urlRepository;
+
+    public AnlyService(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
+    }
+
     private static final String prefix = "http://localhost:8080/anly/";
     private static final String table = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final HashMap<String, String> urlCache = new HashMap<>();
-    private static final HashMap<String, String> keyCache = new HashMap<>();
     private String getKey() {
         StringBuilder key = new StringBuilder("");
         Random root = new Random();
@@ -20,24 +27,25 @@ public class AnlyService {
         return key.toString();
     }
     public String LongUrlHandler(String longUrl) {
-        if (urlCache.containsKey(longUrl)) {
-            return prefix + urlCache.get(longUrl);
+        Url url = urlRepository.getByLongUrl(longUrl);
+        if (url != null) {
+            return prefix + url.getShortUrl();
         }
 
         String key = getKey();
-        while (keyCache.containsKey(key)) {
+        while (urlRepository.getByShortUrl(key) != null) {
             key = getKey();
         }
 
-        keyCache.put(key, longUrl);
-        urlCache.put(longUrl, key);
+        urlRepository.saveAndFlush(new Url(longUrl, key));
         return prefix + key;
     }
 
     public String ShortUrlHandler(String shortUrl) {
-        if (!keyCache.containsKey(shortUrl)) {
+        Url url = urlRepository.getByShortUrl(shortUrl);
+        if (url == null) {
             return null;
         }
-        return keyCache.get(shortUrl);
+        return url.getLongUrl();
     }
 }
