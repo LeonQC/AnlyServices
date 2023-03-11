@@ -1,10 +1,7 @@
 package com.angusF.Anly.service;
 import com.angusF.Anly.data.UrlRepository;
 import com.angusF.Anly.model.Url;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 @Service
