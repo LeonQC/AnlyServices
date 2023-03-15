@@ -1,8 +1,13 @@
 package com.angusF.Anly.service;
 import com.angusF.Anly.data.UrlRepository;
 import com.angusF.Anly.model.Url;
+import com.angusF.Anly.util.EncodeUtil;
+import com.angusF.Anly.util.UrlValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Random;
+import java.net.MalformedURLException;
+
 
 @Service
 public class AnlyService {
@@ -12,26 +17,25 @@ public class AnlyService {
         this.urlRepository = urlRepository;
     }
 
-    private static final String prefix = "http://localhost:8080/anly/";
-    private static final String table = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private String getKey() {
-        StringBuilder key = new StringBuilder("");
-        Random root = new Random();
-        for (int i = 0; i < 6; i++) {
-            int rand = root.nextInt(61);
-            key.append(table.charAt(rand));
+    @Autowired
+    EncodeUtil encodeUtil;
+    @Autowired
+    UrlValidation urlValidation;
+    @Value("${shortUrl.prefix}")
+    private String prefix;
+
+    public String LongUrlHandler(String longUrl) throws MalformedURLException {
+        if (!urlValidation.isValidUrl(longUrl)) {
+            throw new MalformedURLException();
         }
-        return key.toString();
-    }
-    public String LongUrlHandler(String longUrl) {
         Url url = urlRepository.getByLongUrl(longUrl);
         if (url != null) {
             return prefix + url.getShortUrl();
         }
 
-        String key = getKey();
+        String key = encodeUtil.getKey();
         while (urlRepository.getByShortUrl(key) != null) {
-            key = getKey();
+            key = encodeUtil.getKey();
         }
 
         urlRepository.saveAndFlush(new Url(longUrl, key));

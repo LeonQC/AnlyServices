@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -15,7 +16,7 @@ public class AnlyRestController {
     }
 
     @PostMapping("/anly")
-    public String LongUrlHandler(@RequestParam("longUrl") String longUrl) {
+    public String LongUrlHandler(@RequestParam("longUrl") String longUrl) throws MalformedURLException {
         return anlyService.LongUrlHandler(longUrl);
     }
 
@@ -26,7 +27,7 @@ public class AnlyRestController {
             throw new NoSuchElementException(shortUrl);
         } else {
             System.out.println(longUrl);
-            response.sendRedirect("http://" + longUrl);
+            response.sendRedirect(longUrl);
         }
     }
 }
