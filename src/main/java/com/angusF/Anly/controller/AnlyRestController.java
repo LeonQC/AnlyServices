@@ -1,5 +1,6 @@
 package com.angusF.Anly.controller;
 import com.angusF.Anly.service.AnlyService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,16 +16,19 @@ public class AnlyRestController {
         this.anlyService = anlyService;
     }
 
+    @Value("${shortUrl.prefix}")
+    private String prefix;
+
     @PostMapping("/anly")
     public String LongUrlHandler(@RequestParam("longUrl") String longUrl) throws MalformedURLException {
-        return anlyService.LongUrlHandler(longUrl);
+        return prefix + anlyService.LongUrlHandler(longUrl);
     }
 
-    @GetMapping("/anly/{shortUrl}")
-    public void ShortUrlHandler(@PathVariable String shortUrl, HttpServletResponse response) throws IOException {
-        String longUrl = anlyService.ShortUrlHandler(shortUrl);
+    @GetMapping("/anly/{key}")
+    public void ShortUrlHandler(@PathVariable String key, HttpServletResponse response) throws IOException {
+        String longUrl = anlyService.ShortUrlHandler(key);
         if (longUrl == null) {
-            throw new NoSuchElementException(shortUrl);
+            throw new NoSuchElementException(key);
         } else {
             System.out.println(longUrl);
             response.sendRedirect(longUrl);
