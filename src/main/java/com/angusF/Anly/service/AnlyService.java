@@ -4,7 +4,7 @@ import com.angusF.Anly.model.Url;
 import com.angusF.Anly.util.EncodeUtil;
 import com.angusF.Anly.util.UrlValidation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 
@@ -21,16 +21,15 @@ public class AnlyService {
     EncodeUtil encodeUtil;
     @Autowired
     UrlValidation urlValidation;
-    @Value("${shortUrl.prefix}")
-    private String prefix;
 
+    @Cacheable(cacheNames = "longToShort", key = "#longUrl")
     public String LongUrlHandler(String longUrl) throws MalformedURLException {
         if (!urlValidation.isValidUrl(longUrl)) {
             throw new MalformedURLException();
         }
         Url url = urlRepository.getByLongUrl(longUrl);
         if (url != null) {
-            return prefix + url.getShortUrl();
+            return url.getShortUrl();
         }
 
         String key = encodeUtil.getKey();
@@ -39,11 +38,12 @@ public class AnlyService {
         }
 
         urlRepository.saveAndFlush(new Url(longUrl, key));
-        return prefix + key;
+        return key;
     }
 
-    public String ShortUrlHandler(String shortUrl) {
-        Url url = urlRepository.getByShortUrl(shortUrl);
+    @Cacheable(cacheNames = "shortToLong", key = "#key")
+    public String ShortUrlHandler(String key) {
+        Url url = urlRepository.getByShortUrl(key);
         if (url == null) {
             return null;
         }
