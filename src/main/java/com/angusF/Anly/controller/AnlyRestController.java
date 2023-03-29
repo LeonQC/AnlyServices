@@ -34,4 +34,14 @@ public class AnlyRestController {
             response.sendRedirect(longUrl);
         }
     }
+
+    @GetMapping("/test1")
+    public String Test1() {
+        return "A test page with authentication";
+    }
+
+    @GetMapping("/test2")
+    public String Test2() {
+        return "A test page without authentication";
+    }
 }
