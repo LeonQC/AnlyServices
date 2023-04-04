@@ -6,10 +6,14 @@ import com.angusF.Anly.service.AnlyService;
 import com.angusF.Anly.util.UrlValidation;
 import com.angusF.Anly.util.encode.Base62Encode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
-
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("base62")
 public class Base62Service implements AnlyService {
@@ -17,6 +21,20 @@ public class Base62Service implements AnlyService {
 
     public Base62Service(Base62Repository base62Repository) {
         this.base62Repository = base62Repository;
+    }
+
+    @Autowired
+    @Qualifier("counterScript")
+    private DefaultRedisScript<Long> redisCounterScript;
+
+    @Autowired
+    @Qualifier("redisTemplate")
+    private RedisTemplate<String, Long> sequenceIdRedisTemplate;
+
+    private Long getNextSequenceIdByLua() {
+        List<String> keys = new ArrayList<>();
+        keys.add("GLOBAL_SEQUENCE_ID");
+        return sequenceIdRedisTemplate.execute(redisCounterScript, keys);
     }
 
     @Autowired
@@ -36,7 +54,7 @@ public class Base62Service implements AnlyService {
             return encodeUtil.getKey(base62Url.getId());
         }
 
-        long currentId = 1; //To do
+        long currentId = getNextSequenceIdByLua();
         String key = encodeUtil.getKey(currentId);
 
         base62Repository.saveAndFlush(new Base62Url(currentId, longUrl));
