@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.NoSuchElementException;
 
-@CrossOrigin
 @RestController
 public class StlController {
     private final ServiceContext serviceContext;

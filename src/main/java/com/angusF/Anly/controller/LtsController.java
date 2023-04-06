@@ -6,7 +6,6 @@ import com.angusF.Anly.service.ServiceContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 public class LtsController {
     private final ServiceContext serviceContext;
