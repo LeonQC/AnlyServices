@@ -6,7 +6,6 @@ import javax.persistence.*;
 public class Base62Url {
     @Id
     @Column(name="ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name="LONG_URL")
     private String longUrl;
