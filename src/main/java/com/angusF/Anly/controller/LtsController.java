@@ -1,6 +1,6 @@
 package com.angusF.Anly.controller;
 
-import com.angusF.Anly.model.HttpBodyInfo;
+import com.angusF.Anly.model.CommonUrl;
 import com.angusF.Anly.service.AnlyService;
 import com.angusF.Anly.service.ServiceContext;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,16 +21,16 @@ public class LtsController {
     private String prefix;
 
     @PostMapping("/longToShort")
-    public HttpBodyInfo LongUrlHandler(@RequestBody HttpBodyInfo httpBodyInfo) throws Exception {
-        String encode = httpBodyInfo.getEncode();
+    public CommonUrl LongUrlHandler(@RequestBody CommonUrl commonUrl) throws Exception {
+        String encode = commonUrl.getEncode();
         anlyService = serviceContext.getAnlyService(encode);
-        String shortUrl = prefix + anlyService.longUrlHandler(httpBodyInfo.getLongUrl());
+        String shortUrl = prefix + anlyService.longUrlHandler(commonUrl.getLongUrl());
         switch (encode) {
             case "random1" -> shortUrl += "1";
             case "random2" -> shortUrl += "2";
             case "base62" -> shortUrl += "3";
         }
-        httpBodyInfo.setShortUrl(shortUrl);
-        return httpBodyInfo;
+        commonUrl.setShortUrl(shortUrl);
+        return commonUrl;
     }
 }

@@ -1,19 +1,19 @@
 package com.angusF.Anly.model;
 
-public class HttpBodyInfo {
+public class CommonUrl {
     private long id;
     private String longUrl;
     private String shortUrl;
     private String encode;
 
-    public HttpBodyInfo() {
+    public CommonUrl() {
     }
 
-    public HttpBodyInfo(String encode) {
+    public CommonUrl(String encode) {
         this.encode = encode;
     }
 
-    public HttpBodyInfo(String longUrl, String encode) {
+    public CommonUrl(String longUrl, String encode) {
         this.longUrl = longUrl;
         this.encode = encode;
     }
