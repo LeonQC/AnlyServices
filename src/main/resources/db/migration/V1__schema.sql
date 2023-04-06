@@ -23,3 +23,21 @@ CREATE TABLE BASE62(
 );
 CREATE UNIQUE INDEX LONG_URL_INDEX_BS on RANDOM2(LONG_URL);
 
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+                         id SERIAL PRIMARY KEY NOT NULL,
+                         username VARCHAR(45) NOT NULL,
+                         password VARCHAR(45) NOT NULL,
+                         enabled BOOLEAN NOT NULL
+);
+
+DROP TABLE IF EXISTS authorities;
+CREATE TABLE authorities (
+                               id SERIAL PRIMARY KEY NOT NULL,
+                               username VARCHAR(45) NOT NULL,
+                               authority VARCHAR(45) NOT NULL
+);
+
+INSERT INTO users (username, password, enabled) VALUES ('angus', '123456', '1');
+INSERT INTO authorities (username, authority) VALUES ('angus', 'admin');
+
