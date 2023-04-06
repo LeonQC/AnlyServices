@@ -32,8 +32,8 @@ public class SecurityConfig {
                         return config;
                     }
                 })
-                .and().csrf().disable()
-                    .authorizeRequests()
+                .and().csrf().ignoringAntMatchers("/longToShort", "/register")
+                .and().authorizeRequests()
                     .antMatchers("/longToShort", "/shortToLong", "/test2", "/register").permitAll()
                     .antMatchers("/test1").authenticated()
                 .and().formLogin()
