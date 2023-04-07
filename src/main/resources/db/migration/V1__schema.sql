@@ -25,16 +25,16 @@ CREATE UNIQUE INDEX LONG_URL_INDEX_BS on RANDOM2(LONG_URL);
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-                         id SERIAL PRIMARY KEY NOT NULL,
-                         username VARCHAR(45) NOT NULL,
-                         password VARCHAR(200) NOT NULL,
+                         username VARCHAR(50) PRIMARY KEY NOT NULL,
+                         password VARCHAR(500) NOT NULL,
                          enabled BOOLEAN NOT NULL
 );
 
 DROP TABLE IF EXISTS authorities;
 CREATE TABLE authorities (
-                               id SERIAL PRIMARY KEY NOT NULL,
-                               username VARCHAR(45) NOT NULL,
-                               authority VARCHAR(45) NOT NULL
+                               username VARCHAR(50) NOT NULL references users(username),
+                               authority VARCHAR(50) NOT NULL
+
 );
+CREATE UNIQUE INDEX ix_auth_username on authorities(username, authority)
 
