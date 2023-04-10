@@ -3,8 +3,8 @@ package com.angusF.Anly.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="URL")
-public class Url {
+@Table(name="RANDOM1")
+public class Random1Url {
     @Id
     @Column(name="ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,14 +14,14 @@ public class Url {
     @Column(name="SHORT_URL")
     private String shortUrl;
 
-    public Url() {
+    public Random1Url() {
     }
 
-    public Url(String longUrl) {
+    public Random1Url(String longUrl) {
         this.longUrl = longUrl;
     }
 
-    public Url(String longUrl, String shortUrl) {
+    public Random1Url(String longUrl, String shortUrl) {
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }
