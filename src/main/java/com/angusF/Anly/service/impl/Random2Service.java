@@ -1,15 +1,19 @@
 package com.angusF.Anly.service.impl;
 
 import com.angusF.Anly.data.Random2Repository;
+import com.angusF.Anly.model.CommonUrl;
 import com.angusF.Anly.model.Random2Url;
 import com.angusF.Anly.service.AnlyService;
 import com.angusF.Anly.util.UrlValidation;
 import com.angusF.Anly.util.encode.Random2Encode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("random2")
 public class Random2Service implements AnlyService {
@@ -24,6 +28,9 @@ public class Random2Service implements AnlyService {
 
     @Autowired
     Random2Encode encodeUtil;
+
+    @Value("${shortUrl.prefix}")
+    private String prefix;
 
     @Cacheable(cacheNames = "rd2_lts", key = "#longUrl")
     @Override
@@ -53,5 +60,15 @@ public class Random2Service implements AnlyService {
             return null;
         }
         return random2Url.getLongUrl();
+    }
+
+    @Override
+    public List<CommonUrl> getAll() throws Exception{
+        List<CommonUrl> allUrls = new ArrayList<>();
+        List<Random2Url> allRandom2Urls = random2Repository.findAll();
+        for (Random2Url url : allRandom2Urls) {
+            allUrls.add(new CommonUrl(url.getId(), url.getLongUrl(), prefix + url.getShortUrl() + "2", "random2"));
+        }
+        return allUrls;
     }
 }

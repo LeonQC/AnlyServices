@@ -9,12 +9,10 @@ public class CommonUrl {
     public CommonUrl() {
     }
 
-    public CommonUrl(String encode) {
-        this.encode = encode;
-    }
-
-    public CommonUrl(String longUrl, String encode) {
+    public CommonUrl(long id, String longUrl, String shortUrl, String encode) {
+        this.id = id;
         this.longUrl = longUrl;
+        this.shortUrl = shortUrl;
         this.encode = encode;
     }
 

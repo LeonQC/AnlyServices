@@ -9,6 +9,8 @@ public class Base62Url {
     private long id;
     @Column(name="LONG_URL")
     private String longUrl;
+    @Column(name="SHORT_URL")
+    private String shortUrl;
 
     public Base62Url() {
     }
@@ -26,6 +28,12 @@ public class Base62Url {
         this.longUrl = longUrl;
     }
 
+    public Base62Url(long id, String longUrl, String shortUrl) {
+        this.id = id;
+        this.longUrl = longUrl;
+        this.shortUrl = shortUrl;
+    }
+
     public long getId() {
         return id;
     }
@@ -40,5 +48,13 @@ public class Base62Url {
 
     public void setLongUrl(String longUrl) {
         this.longUrl = longUrl;
+    }
+
+    public String getShortUrl() {
+        return shortUrl;
+    }
+
+    public void setShortUrl(String shortUrl) {
+        this.shortUrl = shortUrl;
     }
 }
