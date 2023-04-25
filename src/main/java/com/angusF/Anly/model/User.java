@@ -1,13 +1,13 @@
 package com.angusF.Anly.model;
 
-public class NewUser {
+public class User {
     private String password;
     private String username;
 
-    public NewUser() {
+    public User() {
     }
 
-    public NewUser(String password, String username) {
+    public User(String password, String username) {
         this.password = password;
         this.username = username;
     }

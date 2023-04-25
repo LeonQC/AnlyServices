@@ -2,7 +2,12 @@ package com.angusF.Anly.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -32,13 +37,16 @@ public class SecurityConfig {
                         return config;
                     }
                 })
-                .and().csrf().ignoringAntMatchers("/longToShort", "/register")
-                .and().authorizeRequests()
-                    .antMatchers("/longToShort", "/shortToLong", "/test2", "/register").permitAll()
-                    .antMatchers("/test1").authenticated()
-                .and().formLogin()
-                .and().httpBasic();
+                .and().csrf().disable()
+                .authorizeRequests()
+                    .antMatchers( "/shortToLong", "/test2", "/register", "/longToShort", "/login").permitAll()
+                    .antMatchers("/test1").authenticated();
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 /* Use database to store user info */
     @Bean
